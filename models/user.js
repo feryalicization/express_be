@@ -1,34 +1,55 @@
 'use strict';
-const { Model, DataTypes } = require('sequelize'); 
+const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  class User extends Model {
+  class Karyawan extends Model {
     static associate(models) {
-
+      Karyawan.belongsTo(models.Role, { foreignKey: 'roleId' }); // Foreign key for Role
+      Karyawan.belongsTo(models.Cabang, { foreignKey: 'cabangId' }); // Foreign key for Cabang
     }
   }
-
-  User.init({
-    userName: {
-      type: DataTypes.STRING, 
-      allowNull: false
+  
+  Karyawan.init({
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
     },
-    accountNumber: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    emailAddress: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    identityNumber: {
+    phone: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    photo: {
+      type: DataTypes.STRING // Assuming photo is a URL to the image
+    },
+    roleId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Role', // Name of the referenced model
+        key: 'id' // Primary key in the referenced model
+      }
+    },
+    cabangId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Cabang', 
+        key: 'id' 
+      }
     }
   }, {
     sequelize,
-    modelName: 'User'
+    modelName: 'Karyawan'
   });
 
-  return User;
+  return Karyawan;
 };
