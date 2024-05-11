@@ -1,11 +1,12 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const authenticateToken = require('../middleware/authenticateToken');
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const roles = await prisma.role.findMany({
       where: {
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     const role = await prisma.role.findUnique({
@@ -37,7 +38,7 @@ router.get('/:id', async (req, res) => {
 });
 
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   const { name } = req.body;
   try {
     const newRole = await prisma.role.create({
@@ -51,7 +52,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   try {
@@ -67,7 +68,7 @@ router.put('/:id', async (req, res) => {
 });
 
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     const deletedRole = await prisma.role.update({

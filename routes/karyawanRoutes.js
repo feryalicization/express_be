@@ -3,9 +3,10 @@ const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 const router = express.Router();
+const authenticateToken = require('../middleware/authenticateToken');
 
 
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const karyawanList = await prisma.karyawan.findMany({
       where: {
@@ -30,7 +31,7 @@ router.get('/', async (req, res) => {
 
 
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     const karyawan = await prisma.karyawan.findUnique({
@@ -61,7 +62,7 @@ router.get('/:id', async (req, res) => {
 
 
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   const { email, password, name, phone, photo, roleId, cabangId } = req.body;
 
   try {
@@ -98,7 +99,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { email, password, name, phone, photo, roleId, cabangId } = req.body;
 
@@ -140,7 +141,7 @@ router.put('/:id', async (req, res) => {
 
 
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
 
